@@ -96,15 +96,52 @@
             </footer>
         </div>
 
-        <script>
-            window.addEventListener("load", function () {
-                const preloader = document.getElementById("preloader");
-                document.body.classList.add("is-loaded");
+       <script>
+    window.addEventListener("DOMContentLoaded", function () {
+        const preloader = document.getElementById("preloader");
+        const progressBar = document.querySelector(".progress-bar");
+        const exploreBtn = document.querySelector(".cta.primary");
 
-                preloader.addEventListener("transitionend", function () {
-                    preloader.remove();
-                }, { once: true });
+        // 1. Initial Page Load Simulation
+        // Start filling the bar immediately on DOM load
+        if (progressBar) progressBar.style.width = "100%";
+
+        // Once the entire window (images, styles) is ready, wrap up the loading state
+        window.addEventListener("load", function() {
+            setTimeout(() => {
+                document.body.classList.add("is-loaded");
+                preloader.setAttribute("aria-busy", "false");
+            }, 600); // Small cushion so the user sees the bar hit 100%
+        });
+
+        // 2. Interactive Sandbox Mode ("Explore" Button Click)
+        if (exploreBtn && preloader && progressBar) {
+            exploreBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                // Reset bar instantly to 0% and remove transitions temporarily
+                progressBar.style.transition = "none";
+                progressBar.style.width = "0%";
+                
+                // Bring back the loader screen visually
+                document.body.classList.remove("is-loaded");
+                preloader.setAttribute("aria-busy", "true");
+
+                // Trigger a forced reflow so the browser acknowledges the 0% state
+                progressBar.offsetHeight;
+
+                // Re-apply the smooth 1.2s transition and kick-off the fill to 100%
+                progressBar.style.transition = "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
+                progressBar.style.width = "100%";
+
+                // Seamlessly fade out the loader right as the bar completes filling (1200ms)
+                setTimeout(() => {
+                    document.body.classList.add("is-loaded");
+                    preloader.setAttribute("aria-busy", "false");
+                }, 1200);
             });
-        </script>
+        }
+    });
+</script>
     </body>
 </html>
