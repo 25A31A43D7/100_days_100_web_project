@@ -255,7 +255,10 @@ body.is-loaded .page {
     place-items: center;
     background: rgba(7, 9, 18, 0.92);
     z-index: 1000;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Blocks background clicks while loading */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
 .loader-card {
@@ -291,10 +294,11 @@ body.is-loaded .page {
 
 .progress-bar {
     display: block;
-    width: 35%;
+    width: 0%; /* Starts at 0% */
     height: 100%;
     background: linear-gradient(120deg, var(--accent), var(--accent-strong));
-    animation: progress 1.4s ease-in-out infinite;
+    /* Smoothly animate width changes based on the data-duration or JS value */
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
 .loading-text {
@@ -311,8 +315,8 @@ body.is-loaded .page {
 body.is-loaded #preloader {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none; 
 }
-
 @keyframes spin {
     0% {
         transform: rotate(0deg);
